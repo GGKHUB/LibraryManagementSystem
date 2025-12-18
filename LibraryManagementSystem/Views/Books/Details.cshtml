@@ -1,0 +1,14 @@
+@model LibraryManagementSystem.Models.Book
+@{
+    ViewData["Title"] = "Book Details";
+}
+
+<h1>@Model.Title</h1>
+
+<div class="mb-3"><strong>Author:</strong> @Model.Author</div>
+<div class="mb-3"><strong>ISBN:</strong> @Model.ISBN</div>
+<div class="mb-3"><strong>Location:</strong> @Model.Location</div>
+<div class="mb-3"><strong>Description:</strong><div>@Model.Description</div></div>
+
+<a class="btn btn-secondary" href="/Books">Back</a>
+<a class="btn btn-primary" href="/Books/Edit/@Model.Id">Edit</a>

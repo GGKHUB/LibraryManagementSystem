@@ -1,0 +1,63 @@
+@model IEnumerable<LibraryManagementSystem.Models.Book>
+@{
+    ViewData["Title"] = "Books";
+}
+
+<h1>Books</h1>
+
+<form method="get" class="row g-3 mb-3">
+    <div class="col-md-4">
+        <input type="text" name="searchTitle" value="@ViewData["SearchTitle"]" class="form-control" placeholder="Title" />
+    </div>
+    <div class="col-md-3">
+        <input type="text" name="searchIsbn" value="@ViewData["SearchIsbn"]" class="form-control" placeholder="ISBN" />
+    </div>
+    <div class="col-md-3">
+        <select name="searchLocation" class="form-select">
+            <option value="">-- Any location --</option>
+            @foreach (var loc in Enum.GetValues(typeof(LibraryManagementSystem.Models.Location)).Cast<LibraryManagementSystem.Models.Location>())
+            {
+                <option value="@loc" selected="@(ViewData["SearchLocation"]?.ToString()==loc.ToString())">@loc</option>
+            }
+        </select>
+    </div>
+    <div class="col-md-2">
+        <button class="btn btn-primary">Search</button>
+        <a href="/Books/Create" class="btn btn-success">Add</a>
+    </div>
+</form>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Author</th>
+            <th>ISBN</th>
+            <th>Location</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    @if (!Model.Any())
+    {
+        <tr><td colspan="5"><em>No books found for the current search criteria.</em></td></tr>
+    }
+    else
+    {
+        foreach (var book in Model)
+        {
+            <tr>
+                <td>@book.Title</td>
+                <td>@book.Author</td>
+                <td>@book.ISBN</td>
+                <td>@book.Location</td>
+                <td>
+                    <a class="btn btn-sm btn-primary" href="/Books/Details/@book.Id">Details</a>
+                    <a class="btn btn-sm btn-secondary" href="/Books/Edit/@book.Id">Edit</a>
+                    <a class="btn btn-sm btn-danger" href="/Books/Delete/@book.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    }
+    </tbody>
+</table>

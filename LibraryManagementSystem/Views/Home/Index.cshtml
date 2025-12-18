@@ -1,0 +1,44 @@
+@{
+    ViewData["Title"] = "Welcome";
+}
+
+<h1>Welcome to Home Library</h1>
+<p>Use the <a href="/Books">Books</a> page to manage your personal library. Search by title, ISBN, or location.</p>
+
+<!-- The hero now uses a CSS background image. Replace `/images/home-library.svg` with your uploaded image (e.g., `/images/home-library.jpg`). -->
+<div class="home-hero" role="img" aria-label="Cozy home library">
+    <div class="home-hero-overlay">
+        <div class="home-hero-content">
+            <h2>Welcome to your personal library</h2>
+            <p class="lead">Browse, add, and manage your books.</p>
+        </div>
+    </div>
+</div>
+
+<style>
+    .home-hero { 
+        width: 100%; 
+        height: 380px; 
+        background-image: url('/images/home-library.svg'); 
+        background-size: cover; 
+        background-position: center; 
+        border-radius: 8px; 
+        box-shadow: 0 6px 18px rgba(0,0,0,0.08); 
+        position: relative; 
+        overflow: hidden;
+    }
+    .home-hero-overlay { 
+        position: absolute; inset: 0; 
+        background: linear-gradient(180deg, rgba(0,0,0,0.25), rgba(0,0,0,0.15));
+        display:flex; align-items:center; justify-content:center;
+    }
+    .home-hero-content { color: #fff; text-align:center; padding: 1rem; }
+    .home-hero-content h2 { margin:0; font-size: 2rem; }
+    .home-hero-content .lead { margin-top:0.5rem; opacity:0.95; }
+    @@media (max-width:600px){ .home-hero{height:220px;} .home-hero-content h2{font-size:1.4rem;} }
+</style>
+
+<style>
+    .home-hero { margin-top: 1.5rem; display: flex; justify-content: center; }
+    .home-hero-img { width: 100%; max-width: 1000px; height: auto; border-radius: 8px; box-shadow: 0 6px 18px rgba(0,0,0,0.08); }
+</style>
