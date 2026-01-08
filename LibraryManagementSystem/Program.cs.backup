@@ -53,40 +53,16 @@ app.MapControllerRoute(
 
 app.MapRazorPages();
 
-// Database initialization
+// Ensure DB and seed
 using (var scope = app.Services.CreateScope())
 {
-    var services = scope.ServiceProvider;
-    
-    if (app.Environment.IsDevelopment())
-    {
-        // Development: Use EnsureCreated for quick setup
-        var db = services.GetRequiredService<AppDbContext>();
-        db.Database.EnsureCreated();
-        AppDbContext.SeedData(db);
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    db.Database.EnsureCreated();
+    AppDbContext.SeedData(db);
 
-        var identityDb = services.GetRequiredService<ApplicationDbContext>();
-        identityDb.Database.EnsureCreated();
-    }
-    else
-    {
-        // Production: Use migrations for proper database versioning
-        try
-        {
-            var db = services.GetRequiredService<AppDbContext>();
-            db.Database.Migrate();
-            AppDbContext.SeedData(db);
-
-            var identityDb = services.GetRequiredService<ApplicationDbContext>();
-            identityDb.Database.Migrate();
-        }
-        catch (Exception ex)
-        {
-            var logger = services.GetRequiredService<ILogger<Program>>();
-            logger.LogError(ex, "An error occurred while migrating or seeding the database.");
-            throw;
-        }
-    }
+    // Ensure Identity DB is created
+    var identityDb = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    identityDb.Database.EnsureCreated();
 }
 
 app.Run();

@@ -1,3 +1,4 @@
+@model LibraryManagementSystem.Models.HomeViewModel
 @{
     ViewData["Title"] = "Welcome";
 }
@@ -9,6 +10,116 @@
             <h1>Welcome to Home Library</h1>
             <p>Use the <a href="/Books">Books</a> page to manage your personal library. Search by title, ISBN, or location.</p>
             <p class="lead">Browse, add, and manage your books.</p>
+        </div>
+    </div>
+</div>
+
+<!-- Statistics Section -->
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-12">
+            <h2 class="mb-4">Book Statistics by Location</h2>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Total Books Card -->
+        <div class="col-md-3 mb-4">
+            <div class="card text-center shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title text-muted">Total Books</h5>
+                    <h2 class="display-4 text-primary">@Model.TotalBooks</h2>
+                </div>
+            </div>
+        </div>
+
+        <!-- Location Statistics Cards -->
+        @foreach (var stat in Model.LocationStatistics)
+        {
+            var cardClass = stat.Location switch
+            {
+                LibraryManagementSystem.Models.Location.Home => "border-success",
+                LibraryManagementSystem.Models.Location.Work => "border-info",
+                LibraryManagementSystem.Models.Location.Loaned => "border-warning",
+                LibraryManagementSystem.Models.Location.Unknown => "border-secondary",
+                _ => "border-secondary"
+            };
+
+            var textColor = stat.Location switch
+            {
+                LibraryManagementSystem.Models.Location.Home => "text-success",
+                LibraryManagementSystem.Models.Location.Work => "text-info",
+                LibraryManagementSystem.Models.Location.Loaned => "text-warning",
+                LibraryManagementSystem.Models.Location.Unknown => "text-secondary",
+                _ => "text-secondary"
+            };
+
+            <div class="col-md-3 mb-4">
+                <div class="card @cardClass shadow-sm">
+                    <div class="card-body text-center">
+                        <h5 class="card-title @textColor fw-bold">@stat.LocationName</h5>
+                        <h2 class="display-4">@stat.Count</h2>
+                        <p class="text-muted mb-0">books</p>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- Chart Section (Optional) -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Distribution</h5>
+                    <div class="progress" style="height: 30px;">
+                        @{
+                            var total = Model.TotalBooks > 0 ? Model.TotalBooks : 1;
+                        }
+                        @foreach (var stat in Model.LocationStatistics)
+                        {
+                            var percentage = (stat.Count * 100.0 / total);
+                            var bgClass = stat.Location switch
+                            {
+                                LibraryManagementSystem.Models.Location.Home => "bg-success",
+                                LibraryManagementSystem.Models.Location.Work => "bg-info",
+                                LibraryManagementSystem.Models.Location.Loaned => "bg-warning",
+                                LibraryManagementSystem.Models.Location.Unknown => "bg-secondary",
+                                _ => "bg-secondary"
+                            };
+
+                            <div class="progress-bar @bgClass" role="progressbar" 
+                                 style="width: @percentage.ToString("F1")%" 
+                                 aria-valuenow="@stat.Count" 
+                                 aria-valuemin="0" 
+                                 aria-valuemax="@Model.TotalBooks">
+                                @if (percentage > 10)
+                                {
+                                    <span>@stat.LocationName (@stat.Count)</span>
+                                }
+                            </div>
+                        }
+                    </div>
+                    <div class="mt-3">
+                        @foreach (var stat in Model.LocationStatistics)
+                        {
+                            var percentage = (stat.Count * 100.0 / total);
+                            var colorClass = stat.Location switch
+                            {
+                                LibraryManagementSystem.Models.Location.Home => "text-success",
+                                LibraryManagementSystem.Models.Location.Work => "text-info",
+                                LibraryManagementSystem.Models.Location.Loaned => "text-warning",
+                                LibraryManagementSystem.Models.Location.Unknown => "text-secondary",
+                                _ => "text-secondary"
+                            };
+
+                            <span class="badge bg-light @colorClass me-2">
+                                <strong>@stat.LocationName:</strong> @stat.Count (@percentage.ToString("F1")%)
+                            </span>
+                        }
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

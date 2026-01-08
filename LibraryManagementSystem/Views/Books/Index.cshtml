@@ -3,9 +3,10 @@
     ViewData["Title"] = "Books";
 }
 
-<h1>Books</h1>
+<div class="container mt-3">
+    <h1>Books</h1>
 
-<form method="get" class="row g-3 mb-3">
+    <form method="get" class="row g-3 mb-3">
     <div class="col-md-4">
         <input type="text" name="searchTitle" value="@ViewData["SearchTitle"]" class="form-control" placeholder="Title" />
     </div>
@@ -57,7 +58,8 @@
                     <a class="btn btn-sm btn-danger" href="/Books/Delete/@book.Id">Delete</a>
                 </td>
             </tr>
-        }
-    }
-    </tbody>
-</table>
+                }
+            }
+            </tbody>
+        </table>
+        </div>
