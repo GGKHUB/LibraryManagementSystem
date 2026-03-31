@@ -1,0 +1,99 @@
+@{
+    ViewData["Title"] = "Import Books from CSV";
+    var importedCount = ViewData["ImportedCount"] as int?;
+    var errors = ViewData["Errors"] as List<string>;
+}
+
+<h1>@ViewData["Title"]</h1>
+
+@if (importedCount.HasValue)
+{
+    <div class="alert alert-success" role="alert">
+        Successfully imported <strong>@importedCount</strong> book(s).
+    </div>
+}
+
+@if (errors != null && errors.Count > 0)
+{
+    <div class="alert alert-warning" role="alert">
+        <strong>Some rows had issues:</strong>
+        <ul class="mb-0 mt-1">
+            @foreach (var error in errors)
+            {
+                <li>@error</li>
+            }
+        </ul>
+    </div>
+}
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data">
+                    @Html.AntiForgeryToken()
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3" role="alert"></div>
+
+                    <div class="mb-3">
+                        <label for="csvFile" class="form-label">Select CSV File</label>
+                        <input type="file" class="form-control" id="csvFile" name="csvFile" accept=".csv" />
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-upload"></i> Import
+                    </button>
+                    <a href="/Books" class="btn btn-secondary ms-2">Back to Books</a>
+                </form>
+            </div>
+        </div>
+
+        <div class="card mt-4">
+            <div class="card-header">
+                <strong>CSV Format</strong>
+            </div>
+            <div class="card-body">
+                <p>The CSV file should have a header row with the following columns:</p>
+                <table class="table table-sm table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Column</th>
+                            <th>Required</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>Title</code></td>
+                            <td><span class="badge bg-danger">Yes</span></td>
+                            <td>Book title (max 200 characters)</td>
+                        </tr>
+                        <tr>
+                            <td><code>Author</code></td>
+                            <td><span class="badge bg-secondary">No</span></td>
+                            <td>Author name (max 200 characters)</td>
+                        </tr>
+                        <tr>
+                            <td><code>ISBN</code></td>
+                            <td><span class="badge bg-secondary">No</span></td>
+                            <td>ISBN number (max 30 characters)</td>
+                        </tr>
+                        <tr>
+                            <td><code>Location</code></td>
+                            <td><span class="badge bg-secondary">No</span></td>
+                            <td>One of: <code>Home</code>, <code>Work</code>, <code>Loaned</code>, <code>Unknown</code>. Defaults to Home.</td>
+                        </tr>
+                        <tr>
+                            <td><code>Description</code></td>
+                            <td><span class="badge bg-secondary">No</span></td>
+                            <td>Book description (max 1000 characters)</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p class="mb-0"><strong>Example:</strong></p>
+                <pre class="bg-light p-2 rounded">Title,Author,ISBN,Location,Description
+The Great Gatsby,F. Scott Fitzgerald,978-0743273565,Home,A novel about the American dream
+1984,George Orwell,978-0451524935,Work,A dystopian novel</pre>
+            </div>
+        </div>
+    </div>
+</div>

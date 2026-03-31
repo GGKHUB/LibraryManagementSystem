@@ -1,4 +1,5 @@
 using LibraryManagementSystem.Data;
+using LibraryManagementSystem.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 
@@ -16,7 +17,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Add Identity services
-builder.Services.AddDefaultIdentity<IdentityUser>(options =>
+builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
 {
     options.SignIn.RequireConfirmedAccount = false;  // Changed to false for demo purposes
 })
@@ -60,13 +61,13 @@ using (var scope = app.Services.CreateScope())
     
     if (app.Environment.IsDevelopment())
     {
-        // Development: Use EnsureCreated for quick setup
+        // Development: Use EnsureCreated for app data, Migrate for identity
         var db = services.GetRequiredService<AppDbContext>();
         db.Database.EnsureCreated();
         AppDbContext.SeedData(db);
 
         var identityDb = services.GetRequiredService<ApplicationDbContext>();
-        identityDb.Database.EnsureCreated();
+        identityDb.Database.Migrate();
     }
     else
     {
